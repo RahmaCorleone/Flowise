@@ -1,6 +1,6 @@
 {
     "name": "flowise-worker-healthcheck",
-    "version": "1.0.0",
+    "version": "3.0.11",
     "description": "Simple healthcheck server for Flowise worker",
     "main": "healthcheck.js",
     "private": true,

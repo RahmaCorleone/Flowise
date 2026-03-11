@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types'
+import { Available } from '@/ui-component/rbac/available'
+import ReviewPanel from '@/views/canvas/ReviewPanel'
+import { reviewFlow } from '@/views/canvas/reviewService'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useRef, useState } from 'react'
-
 // material-ui
 import { useTheme } from '@mui/material/styles'
 import { Avatar, Box, ButtonBase, Typography, Stack, TextField, Button } from '@mui/material'
@@ -19,7 +21,6 @@ import ChatflowConfigurationDialog from '@/ui-component/dialog/ChatflowConfigura
 import UpsertHistoryDialog from '@/views/vectorstore/UpsertHistoryDialog'
 import ViewLeadsDialog from '@/ui-component/dialog/ViewLeadsDialog'
 import ExportAsTemplateDialog from '@/ui-component/dialog/ExportAsTemplateDialog'
-import { Available } from '@/ui-component/rbac/available'
 
 // API
 import chatflowsApi from '@/api/chatflows'
@@ -31,19 +32,20 @@ import useApi from '@/hooks/useApi'
 import { generateExportFlowData } from '@/utils/genericHelper'
 import { uiBaseURL } from '@/store/constant'
 import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW } from '@/store/actions'
+// أضيفي السطرين دول مع باقي الـ imports
 
 // ==============================|| CANVAS HEADER ||============================== //
 
-const CanvasHeader = ({ chatflow, isAgentCanvas, isAgentflowV2, handleSaveFlow, handleDeleteFlow, handleLoadFlow }) => {
+const CanvasHeader = ({ chatflow, isAgentCanvas, isAgentflowV2, handleSaveFlow, handleDeleteFlow, handleLoadFlow, nodes, edges }) => {
     const theme = useTheme()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const flowNameRef = useRef()
     const settingsRef = useRef()
-
     const [isEditingFlowName, setEditingFlowName] = useState(null)
     const [flowName, setFlowName] = useState('')
     const [isSettingsOpen, setSettingsOpen] = useState(false)
+    const [isReviewOpen, setReviewOpen] = useState(false)
     const [flowDialogOpen, setFlowDialogOpen] = useState(false)
     const [apiDialogOpen, setAPIDialogOpen] = useState(false)
     const [apiDialogProps, setAPIDialogProps] = useState({})
@@ -451,6 +453,25 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, isAgentflowV2, handleSaveFlow, 
                             <IconSettings stroke={1.5} size='1.3rem' />
                         </Avatar>
                     </ButtonBase>
+                    <ButtonBase title='Review Agent' sx={{ borderRadius: '8px' }} onClick={() => setReviewOpen(true)}>
+                        <Box
+                            sx={{
+                                px: 1.5,
+                                py: 0.8,
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.8,
+                                boxShadow: '0 0 16px rgba(99,102,241,0.4)',
+                                '&:hover': { opacity: 0.9 }
+                            }}
+                        >
+                            <Typography sx={{ fontSize: 14 }}>🔍</Typography>
+                            <Typography sx={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Review Agent</Typography>
+                        </Box>
+                    </ButtonBase>
                 </Box>
             </Stack>
             <Settings
@@ -498,6 +519,15 @@ const CanvasHeader = ({ chatflow, isAgentCanvas, isAgentflowV2, handleSaveFlow, 
                 onCancel={() => setChatflowConfigurationDialogOpen(false)}
                 isAgentCanvas={isAgentCanvas}
             />
+            {isReviewOpen && (
+                <ReviewPanel
+                    chatflow={chatflow}
+                    nodes={nodes || []}
+                    edges={edges || []}
+                    onClose={() => setReviewOpen(false)}
+                    onReview={reviewFlow}
+                />
+            )}
         </>
     )
 }
@@ -508,7 +538,9 @@ CanvasHeader.propTypes = {
     handleDeleteFlow: PropTypes.func,
     handleLoadFlow: PropTypes.func,
     isAgentCanvas: PropTypes.bool,
-    isAgentflowV2: PropTypes.bool
+    isAgentflowV2: PropTypes.bool,
+    nodes: PropTypes.array,
+    edges: PropTypes.array
 }
 
 export default CanvasHeader

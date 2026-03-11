@@ -2,7 +2,7 @@ import { convertMultiOptionsToStringArray, getCredentialData, getCredentialParam
 import { createOutlookTools } from './core'
 import type { ICommonObject, INode, INodeData, INodeParams } from '../../../src/Interface'
 
-class MicrosoftOutlook_Tools implements INode {
+class MicrosoftOutlookAttachments_Tools implements INode {
     label: string
     name: string
     version: number
@@ -15,11 +15,10 @@ class MicrosoftOutlook_Tools implements INode {
     inputs: INodeParams[]
 
     constructor() {
-        this.label = 'Microsoft Outlook'
-        this.name = 'microsoftOutlook'
+        this.label = 'Microsoft Outlook (Attachments)'
+        this.name = 'microsoftOutlookAttachments'
         this.version = 1.0
-        this.type = 'MicrosoftOutlook'
-        this.icon = 'outlook.svg'
+        this.type = 'MicrosoftOutlookAttachments'
         this.category = 'Tools'
         this.description = 'Perform Microsoft Outlook operations for calendars, events, and messages'
         this.baseClasses = [this.type, 'Tool']
@@ -834,4 +833,4 @@ class MicrosoftOutlook_Tools implements INode {
     }
 }
 
-module.exports = { nodeClass: MicrosoftOutlook_Tools }
+module.exports = { nodeClass: MicrosoftOutlookAttachments_Tools }

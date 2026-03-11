@@ -577,6 +577,8 @@ const Canvas = () => {
                             handleDeleteFlow={handleDeleteFlow}
                             handleLoadFlow={handleLoadFlow}
                             isAgentCanvas={isAgentCanvas}
+                            nodes={nodes}
+                            edges={edges}
                         />
                     </Toolbar>
                 </AppBar>
